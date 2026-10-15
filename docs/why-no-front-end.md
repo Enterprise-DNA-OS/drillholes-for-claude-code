@@ -1,6 +1,6 @@
 # Why there is no front end
 
-MX Deposit is a database with a subscription. The tables underneath it are ordinary: a few entities, a few relationships, a handful of workflows you repeat every week. What you pay for is the layer on top that lets people who do not write SQL get at those tables. Screens, filters, dashboards, forms.
+MX Deposit is a database with a subscription and a logging app. The tables underneath it are ordinary: a few entities, a few relationships, a handful of workflows you repeat every week. What you pay for is the layer on top that lets people who do not write SQL get at those tables. Screens, filters, dashboards, forms.
 
 That layer used to be the whole product, because talking to a database was hard. It is not hard any more. Open this folder in Claude Code, describe what you want, and it writes the query, runs it, and explains the answer. Ask a question the dashboard never had a chart for and you still get an answer.
 
@@ -13,8 +13,9 @@ That layer used to be the whole product, because talking to a database was hard.
 
 ## What you give up
 
-- **A visual board.** Stages are a table you ask about, not cards you drag.
-- **A phone app.** It runs where Claude Code runs.
+- **A logging app on a tablet at the rig.** Geologists log on paper or a spreadsheet and the sheet comes in with one command. Enterprise DNA builds a tablet logging form on the same database when a team wants one.
+- **Charts on screen.** QAQC control charts and hole traces are pages you render with `npm run view`, or a chart you ask for, not a live screen.
+- **Built-in sync between camp and office.** It runs where Claude Code runs. A laptop in camp can run on the embedded database, but sharing one set of records with the office means pointing both at one hosted database.
 - **A vendor help desk.** This is open source. Enterprise DNA supports the installed version for businesses that want someone to call.
 
 ## Who this fits

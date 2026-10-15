@@ -1,0 +1,7 @@
+Hole ID,Sample ID,From,To,Sample Type,Parent Sample,Standard ID,Recovery %,Weight (kg),Dispatch ID,Lab
+MXRC101,MX00001,0,4,Primary,,,90,3.1,MX-D01,Example Assay Laboratories Perth
+MXRC101,MX00002,4,8,Primary,,,90,3.1,MX-D01,Example Assay Laboratories Perth
+MXRC101,MX00003,8,12,Primary,,,90,3.1,MX-D01,Example Assay Laboratories Perth
+MXRC101,MX00004,12,16,Primary,,,90,3.1,MX-D01,Example Assay Laboratories Perth
+MXRC101,MX09001,,,Duplicate,MX00002,,,3.0,MX-D01,Example Assay Laboratories Perth
+,MX09002,,,Standard,,CRM-LOW,,,MX-D01,Example Assay Laboratories Perth

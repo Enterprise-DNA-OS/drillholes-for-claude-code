@@ -1,11 +1,37 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "hole-summary",
+    "title": "Drill hole summary log",
+    "for_each": "select id, name from holes where status in ('complete', 'abandoned', 'drilling') order by name",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      { "title": "Collar", "note": "Coordinates with the datum, projection and zone stated, as the WA reporting guidelines require.", "sql": "select h.name as hole, h.hole_type as type, h.status, h.easting, h.northing, h.rl, coalesce(h.datum, '') as datum, coalesce(h.zone, '') as zone, h.collar_method as surveyed_by, h.azimuth, h.dip, h.max_depth, coalesce(h.started_on::text, '') as started, coalesce(h.completed_on::text, '') as completed, coalesce(h.contractor, '') as contractor from holes h where h.id = $1" },
+      { "title": "Downhole surveys", "sql": "select depth, azimuth, dip, method, coalesce(azimuth_ref, 'not stated') as azimuth_reference from surveys where hole_id = $1 order by depth" },
+      { "title": "Geology", "sql": "select from_m, to_m, lith_code, coalesce(weathering, '') as weathering, coalesce(alteration, '') as alteration, description from logs where hole_id = $1 order by from_m" },
+      { "title": "Significant results", "note": "Primary samples at or above 0.5 for the element reported.", "sql": "select s.name as sample, s.from_m, s.to_m, a.element, a.value, a.units from samples s join assays a on a.sample_id = s.id where s.hole_id = $1 and s.sample_type = 'primary' and a.value >= 0.5 order by s.from_m" },
+      { "title": "Open checks", "sql": "select rule, issue from compliance_issues where subject = (select name from holes where id = $1) order by rule" }
+    ]
+  },
+  {
+    "name": "sample-submission",
+    "title": "Sample submission sheet",
+    "for_each": "select id, name from dispatches order by sent_on, name",
+    "file": "name",
+    "sections": [
+      { "title": "Batch", "note": "Sent with the samples and signed by the lab on receipt, for the chain of custody.", "sql": "select d.name as batch, l.name as lab, d.sent_on, coalesce(d.consignment, '') as consignment, ds.samples, ds.primaries, ds.standards, ds.blanks, ds.duplicates, coalesce(d.received_on::text, '') as received_on, coalesce(d.lab_job, '') as lab_job from dispatches d join labs l on l.id = d.lab_id join dispatch_status ds on ds.dispatch_id = d.id where d.id = $1" },
+      { "title": "Samples", "sql": "select s.name as sample, coalesce(h.name, '') as hole, s.from_m, s.to_m, s.sample_type as type, coalesce(s.standard_name, '') as standard, s.weight_kg from samples s left join holes h on h.id = s.hole_id where s.dispatch_id = $1 order by s.name" },
+      { "title": "Received by the lab", "sql": "select '' as name, '' as signature, '' as date_received, '' as samples_counted where $1::uuid is not null" }
+    ]
+  },
+  {
+    "name": "tenement-drilling",
+    "title": "Tenement drilling summary",
+    "for_each": "select id, name from tenements where status = 'live' order by name",
+    "file": "name",
+    "sections": [
+      { "title": "Reporting year", "note": "WA annual mineral exploration reports are due no later than 60 days after each anniversary (Guidelines for Mineral Exploration Reports on Mining Tenements, October 2025).", "sql": "select tenement, project, jurisdiction, holder, last_anniversary as year_to, due_on, state, holes_in_period, metres_in_period from tenement_reports where tenement_id = $1" },
+      { "title": "Holes completed in the year", "sql": "select h.name as hole, h.hole_type as type, h.max_depth, h.completed_on, h.easting, h.northing, coalesce(h.datum, '') as datum from holes h join tenement_reports tr on tr.tenement_id = h.tenement_id where h.tenement_id = $1 and h.completed_on > (tr.last_anniversary - interval '1 year')::date and h.completed_on <= tr.last_anniversary order by h.name" },
+      { "title": "Results still pending", "note": "Pending results go in next year's report with the collar file.", "sql": "select hole, awaiting_results, not_dispatched from hole_status where hole_id in (select id from holes where tenement_id = $1) and awaiting_results + not_dispatched > 0 order by hole" }
     ]
   }
 ]

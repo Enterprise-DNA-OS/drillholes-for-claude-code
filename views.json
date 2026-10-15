@@ -2,13 +2,33 @@
   {
     "name": "week",
     "title": "This week",
-    "subtitle": "Drillhole Data for Claude Code: what needs attention, rendered by npm run view",
+    "subtitle": "What needs attention across the project, rendered by npm run view",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Rule checks", "note": "Each line cites its rule in docs/compliance.md.", "sql": "select rule, subject, issue from compliance_issues order by rule, subject" },
+      { "title": "Drilling now", "sql": "select hole, hole_type as type, max_depth as depth_so_far, planned_depth, started_on, rig from hole_status where status = 'drilling' order by hole" },
+      { "title": "Lab batches waiting", "sql": "select dispatch, lab, stage, days_in_stage, samples from dispatch_status where stage <> 'results in' order by days_in_stage desc" },
+      { "title": "Tenement reports", "sql": "select tenement, last_anniversary as year_to, due_on, state from tenement_reports order by due_on" }
+    ]
+  },
+  {
+    "name": "qaqc",
+    "title": "QAQC",
+    "subtitle": "Standards, blanks and duplicates by batch against the house limits",
+    "sections": [
+      { "title": "Standards", "note": "z is the result less the certified value, in standard deviations.", "sql": "select dispatch, sample, standard_name as standard, element, value, certified_value, z, result from qc_standards order by dispatch, sample" },
+      { "title": "Blanks", "sql": "select dispatch, sample, element, value, detection_limit, result from qc_blanks order by dispatch, sample" },
+      { "title": "Field duplicates", "sql": "select dispatch, sample, original, element, original_value, duplicate_value, diff_pct, result from qc_duplicates order by dispatch, sample" },
+      { "title": "Insertion rates", "sql": "select dispatch, primaries, standards, standards_needed, blanks, blanks_needed, duplicates, duplicates_needed from qc_rates order by dispatch" }
+    ]
+  },
+  {
+    "name": "holes",
+    "title": "Holes",
+    "subtitle": "Every hole with metres drilled, logged and sampled, and where its results are",
+    "sections": [
+      { "title": "By hole", "sql": "select hole, tenement, hole_type as type, status, max_depth, metres_logged, metres_sampled, samples, not_dispatched, awaiting_results, surveys, collar_method as collar from hole_status order by hole" },
+      { "title": "Metres by rig and month", "sql": "select coalesce(contractor, '') as contractor, coalesce(rig, '') as rig, to_char(completed_on, 'YYYY-MM') as month, count(*)::int as holes, sum(max_depth) as metres from holes where completed_on is not null group by 1, 2, 3 order by 3 desc" },
+      { "title": "Rehabilitation", "sql": "select name as hole, status, completed_on, coalesce(capped_on::text, 'not capped') as capped, coalesce(rehabilitated_on::text, 'not yet') as rehabilitated from holes where status in ('complete', 'abandoned') order by completed_on" }
     ]
   }
 ]

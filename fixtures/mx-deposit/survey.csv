@@ -1,0 +1,4 @@
+Hole ID,Depth,Azimuth,Dip,Survey Type,Azimuth Reference
+MXRC101,30,270.4,-59.8,Gyro,True North
+MXRC101,66,271.1,-59.1,Gyro,True North
+MXRC102,70,269.5,-60.2,Camera,Magnetic

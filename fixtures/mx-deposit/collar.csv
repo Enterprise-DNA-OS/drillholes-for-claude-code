@@ -1,0 +1,4 @@
+Hole ID,Hole Type,Hole Status,Easting,Northing,Elevation,Datum,Survey Method,Azimuth,Dip,Planned Depth,Final Depth,Start Date,End Date,Tenement,Drilling Company,Rig
+MXRC101,RC,Complete,353010.5,6635002.1,415.2,GDA2020,DGPS,270,-60,70,66,02/08/2026,04/08/2026,E29/1187,Example Drilling,RC-07
+MXRC102,RC,Complete,353050.0,6635001.7,415.6,GDA2020,Handheld GPS,270,-60,70,70,05/08/2026,07/08/2026,E 29/1187,Example Drilling,RC-07
+MXDD103,Diamond,Planned,353100.0,6635000.0,,GDA2020,Planned,270,-55,180,,,,E 29/9999,,

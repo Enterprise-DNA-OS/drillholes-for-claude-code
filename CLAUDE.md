@@ -22,9 +22,31 @@ Fill this in once. A worker with context knows. A worker without it guesses.
 
 | When the operator asks for... | Use this |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| What needs attention, what is overdue | `/attention` |
+| The Monday review | `/weekly-review` |
+| Where a hole is up to | `/hole`, `/holes` |
+| A new hole on the programme | `/plan-hole`, then `/start-hole` |
+| The hole is finished | `/complete-hole` (or `/abandon-hole`), `/survey-collar`, `/add-survey`, `/cap-hole` |
+| The geologist's log sheet | `/log-interval`, or `/import` for a whole export |
+| The sample sheet | `/sample-hole`, `/add-qc`, `/set-recovery` |
+| Samples go to the lab | `/dispatch`, then `npm run docs -- sample-submission` |
+| The lab confirms receipt | `/receive` |
+| Results arrive | `/load-results`, then `/qaqc` before anyone looks at grades |
+| The lab is slow | `/pending`, `/draft-lab-chase` |
+| Are the standards, blanks and duplicates OK | `/qaqc` |
+| What did we hit | `/assays`, `/intercepts` |
+| A market release | `/draft-announcement` (for the competent person) |
+| Tenement reports | `/reports`, `/report-files`, `/lodge-report` |
+| The driller's invoice | `/drilling` |
+| Are we meeting JORC Table 1 and the WA guidelines | `/compliance` |
+| Rehabilitation | `/compliance`, `/rehab-hole` |
+| New project, tenement, standard or lab | `/add-project`, `/add-tenement`, `/add-standard`, `/add-lab` |
+| A QC limit or a report rule changes | `/settings`, `/set` |
+| Bring MX Deposit data across | `/import` |
+| Change a field, rule or table | `/customise` |
+| A new page to look at | `/new-view` |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+If an ask fits nothing here, run the CLI directly (`npm run dh -- help`) and then propose a new command for it.
 
 ## Hard rules
 
@@ -32,6 +54,10 @@ If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) an
 - Never delete records without an explicit yes in this session. Prefer marking closed or archived.
 - Never invent a record. If a name is ambiguous, list the candidates and ask.
 - The database is the source of truth. If the answer is not in it, say so.
+- Never invent or adjust an assay, a depth, a coordinate, a recovery or a certified value. Results come from the lab file; certified values come from the certificate.
+- Results are not released from here. Drafts for a market release go to `drafts/` for the competent person, who signs off results and JORC Table 1.
+- Show QAQC for a batch before its grades. A failed standard or blank is raised before any intercept from that batch is quoted.
+- Never renumber a sample ticket that has gone to a lab.
 
 ## Where things live
 
